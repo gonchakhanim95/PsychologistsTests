@@ -28,6 +28,7 @@ namespace SelectionPsychologists.Tests.Client
             Assert.AreEqual(expectedCode, actualCode);
 
             string token = responseMessage.Content.ReadAsStringAsync().Result;
+
             return token;
         }
 
@@ -58,6 +59,7 @@ namespace SelectionPsychologists.Tests.Client
 
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
             HttpClient client = new HttpClient(clientHandler);
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             HttpRequestMessage message = new HttpRequestMessage()
@@ -68,9 +70,14 @@ namespace SelectionPsychologists.Tests.Client
             };
 
             HttpResponseMessage responseMessage = client.Send(message);
+
             HttpStatusCode actualCode = responseMessage.StatusCode;
             Assert.AreEqual(expectedCode, actualCode);
 
+            string responseJson = responseMessage.Content.ReadAsStringAsync().Result;
+            List<PsychologistResponseModel> psychologists = JsonSerializer.Deserialize<List<PsychologistResponseModel>>(responseJson)!;
+
+            return psychologists;
         }
     }
 }
