@@ -85,6 +85,7 @@ namespace SelectionPsychologists.Tests.Client
 
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
             HttpClient client = new HttpClient(clientHandler);
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             HttpRequestMessage message = new HttpRequestMessage()
@@ -93,6 +94,7 @@ namespace SelectionPsychologists.Tests.Client
                 RequestUri = new System.Uri($"https://piter-education.ru:10040/Psychologists/{id}")
             }
             HttpResponseMessage responseMessage = client.Send(message);
+
             HttpStatusCode actualCode = responseMessage.StatusCode;
             Assert.AreEqual(expectedCode, actualCode);
         }

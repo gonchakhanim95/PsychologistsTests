@@ -37,9 +37,10 @@ namespace SelectionPsychologists.Tests.Model
                    WorkExperience == model.WorkExperience &&
                    Price == model.Price;
         }
+
         public override string ToString()
         {
-           return Name;
+            return Name;
         }
     }
 }
