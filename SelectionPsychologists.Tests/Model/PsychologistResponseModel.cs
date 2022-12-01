@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace DeletePsy.Model
+namespace SelectionPsychologists.Tests.Model
 {
     public class PsychologistResponseModel
     {
@@ -27,5 +27,15 @@ namespace DeletePsy.Model
 
         [JsonPropertyName("price")]
         public double Price { get; set; }
+
+        /*public override bool Equals(object? obj)
+        {
+            return obj is PsychologistResponseModel model &&
+                   Name == model.Name &&
+                   LastName == model.LastName &&
+                   Gender == model.Gender &&
+                   WorkExperience == model.WorkExperience &&
+                   Price == model.Price;
+        }*/
     }
 }

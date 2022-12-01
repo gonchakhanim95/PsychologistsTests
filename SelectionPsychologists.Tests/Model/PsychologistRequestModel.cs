@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace DeletePsy.Model
+namespace SelectionPsychologists.Tests.Model
 {
     public class PsychologistRequestModel
     {
