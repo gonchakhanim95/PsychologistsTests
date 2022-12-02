@@ -33,7 +33,7 @@ namespace SelectionPsychologists.Tests.Model
         [JsonPropertyName("price")]
         public double Price { get; set; }
 
-        public override bool Equals(object? obj)
+        /*public override bool Equals(object? obj)
         {
             return obj is PsychologistResponseModel model &&
                    Name == model.Name &&
@@ -46,6 +46,6 @@ namespace SelectionPsychologists.Tests.Model
         public override string ToString()
         {
             return Name;
-        }
+        }*/
     }
 }
