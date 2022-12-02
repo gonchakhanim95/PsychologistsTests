@@ -11,7 +11,7 @@ namespace SelectionPsychologists.Tests
         private const string EMAIL = "zakirella@gmail.ru";
 
         [Test]
-        public void ChangeDataPsyTest()
+        public void ChangeDataPsyTests()
         {
             PsychologistRequestModel psychologistRequestModel = new PsychologistRequestModel() //rabotaet
             {
@@ -69,7 +69,17 @@ namespace SelectionPsychologists.Tests
 
             client.ChangePersonalData(psychologistRequestModelWithId, token);
 
+            AuthRequestModel auth = new AuthRequestModel()
+            {
+                Email = "user@example.com",
+                Password = "stringst"
+            };
+            SuperClient superClient = new SuperClient();
+            token = superClient.Auth(auth);
 
+            List<PsychologistResponseModel> psychologists = superClient.GetPsy(token);
+
+            CollectionAssert.Contains(psychologists, new PsychologistResponseModel());
         }
 
         [TearDown]
