@@ -33,7 +33,7 @@ namespace SelectionPsychologists.Tests
                 Price = 50
             };
             PsychologistClient client = new PsychologistClient();
-            var id = client.CreatePsy(psychologistsRequestModel);
+            client.CreatePsy(psychologistsRequestModel);
 
 
             AuthRequestModel authRequestModel = new AuthRequestModel()
@@ -41,11 +41,10 @@ namespace SelectionPsychologists.Tests
                 Email = "user@example.com",
                 Password = "stringst"
             };
-            PsychologistClient clientt = new PsychologistClient();
+            SuperClient superClient= new SuperClient();
+            string token = superClient.Auth(authRequestModel);
 
-            string token = client.Auth(authRequestModel);
-
-            List<PsychologistResponseModel> psychologists = clientt.GetPsy(token);
+            List<PsychologistResponseModel> psychologists = superClient.GetPsy(token);
 
             /*CollectionAssert.Contains(psychologists, new PsychologistResponseModel());*/
         }
