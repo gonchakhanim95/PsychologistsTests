@@ -1,11 +1,7 @@
 ﻿using SelectionPsychologists.Tests.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
 
 namespace SelectionPsychologists.Tests.Client
@@ -96,10 +92,16 @@ namespace SelectionPsychologists.Tests.Client
                 Method = HttpMethod.Delete,
                 RequestUri = new System.Uri($"https://piter-education.ru:10040/Psychologists/{id}")
             }
+
             HttpResponseMessage responseMessage = client.Send(message);
 
-            HttpStatusCode actualCode = responseMessage.StatusCode;
-            Assert.AreEqual(expectedCode, actualCode);
+            HttpStatusCode actualCode = responseMessage.StatusCode; // sverit code
+
+            string responseJson = responseMessage.Content.ReadAsStringAsync().Result;
+            List<PsychologistResponseModel> psychologists = JsonSerializer.Deserialize<List<PsychologistResponseModel>>(responseJson)!;
+
+            return psychologists;
+        }
         }
     }
 }
