@@ -80,7 +80,6 @@ namespace SelectionPsychologists.Tests.Client
         public void DeleteAkkauntAsPsy(int id, string token)
         {
             HttpStatusCode expectedCode = HttpStatusCode.NoContent;
-            string json = JsonSerializer.Serialize<PsychologistRequestModelWithId>(model);
 
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
@@ -91,18 +90,14 @@ namespace SelectionPsychologists.Tests.Client
             {
                 Method = HttpMethod.Delete,
                 RequestUri = new System.Uri($"https://piter-education.ru:10040/Psychologists/{id}")
-            }
+            };
 
             HttpResponseMessage responseMessage = client.Send(message);
 
-            HttpStatusCode actualCode = responseMessage.StatusCode; // sverit code
-
-            string responseJson = responseMessage.Content.ReadAsStringAsync().Result;
-            List<PsychologistResponseModel> psychologists = JsonSerializer.Deserialize<List<PsychologistResponseModel>>(responseJson)!;
-
-            return psychologists;
+            HttpStatusCode actualCode = responseMessage.StatusCode;
+            Assert.AreEqual(expectedCode,actualCode);
         }
-        }
+        
 
     }
 }
