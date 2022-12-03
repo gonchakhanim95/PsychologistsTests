@@ -7,16 +7,15 @@ using System.Data.SqlClient;
 
 namespace SelectionPsychologists.Tests
 {
-    public class Tests
+    public class CreateAndAuthClient
     {
         private const string EMAIL = "guseyn123qwer23@gmail.com";
         private const string PASSWORD = "Gus1Client";
+
         [Test]
-        public void Test1()
+        public void CreateAndAuthClientTest()
         {
-
             ClientClient client = new ClientClient();
-
             ClientRequestModel clientRegistrationModel = new ClientRequestModel()
             {
                 Name = "guseyn",
@@ -28,8 +27,6 @@ namespace SelectionPsychologists.Tests
             };
 
             int id = client.RegistrationClient(clientRegistrationModel);
-
-            //2oy test
 
             AuthClientRequestModel clientAuthModel = new AuthClientRequestModel()
             {
@@ -49,16 +46,11 @@ namespace SelectionPsychologists.Tests
                 PhoneNumber = clientRegistrationModel.PhoneNumber,
                 BirthDate = clientRegistrationModel.BirthDate
             };
-
             CheckClientModel actualClient = client.CheckClientById(id, token);
-
-
 
             Assert.AreEqual(expextedClient, actualClient);
 
         }
-
-
         [TearDown]
         public void TD()
         {
