@@ -8,10 +8,10 @@ namespace SelectionPsychologists.Tests.Client
 {
     public class PsychologistClient
     {
-        public string AuthPsy(AuthRequestModel model) // reqistr kak psixolog
+        public string AuthPsy(AuthRequestModel model) 
         {
             HttpStatusCode expectedCode = HttpStatusCode.OK;
-            string json = JsonSerializer.Serialize<AuthRequestModel>(model); // body
+            string json = JsonSerializer.Serialize<AuthRequestModel>(model); 
 
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
@@ -21,11 +21,11 @@ namespace SelectionPsychologists.Tests.Client
             {
                 Method = HttpMethod.Post,
                 RequestUri = new System.Uri($"https://piter-education.ru:10040/Auth"),
-                Content = new StringContent(json, Encoding.UTF8, "application/json") // esli est body
+                Content = new StringContent(json, Encoding.UTF8, "application/json") 
             };
             HttpResponseMessage responseMessage = client.Send(message);
 
-            HttpStatusCode actualCode = responseMessage.StatusCode; // sverit code
+            HttpStatusCode actualCode = responseMessage.StatusCode; 
             Assert.AreEqual(expectedCode, actualCode);
 
             string token = responseMessage.Content.ReadAsStringAsync().Result;
@@ -44,7 +44,7 @@ namespace SelectionPsychologists.Tests.Client
             {
                 Method = HttpMethod.Post,
                 RequestUri = new System.Uri($"https://piter-education.ru:10040/Psychologists"),
-                Content = new StringContent(json, Encoding.UTF8, "application/json") // esli est body
+                Content = new StringContent(json, Encoding.UTF8, "application/json") 
             };
             HttpResponseMessage responseMessage = client.Send(message);
             HttpStatusCode actualCode = responseMessage.StatusCode;
@@ -67,16 +67,13 @@ namespace SelectionPsychologists.Tests.Client
             {
                 Method = HttpMethod.Put,
                 RequestUri = new System.Uri($"https://piter-education.ru:10040/Psychologists/{model.Id}"),
-                Content = new StringContent(json, Encoding.UTF8, "application/json") // esli est body
+                Content = new StringContent(json, Encoding.UTF8, "application/json") 
             };
             HttpResponseMessage responseMessage = client.Send(message);
 
-            HttpStatusCode actualCode = responseMessage.StatusCode; // sverit code
+            HttpStatusCode actualCode = responseMessage.StatusCode; 
             Assert.AreEqual(expectedCode, actualCode);
-
-            string token = responseMessage.Content.ReadAsStringAsync().Result;
-            return token;
-        }*/
+        }
 
     }
 }
