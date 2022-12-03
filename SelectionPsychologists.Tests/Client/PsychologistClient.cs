@@ -31,7 +31,7 @@ namespace SelectionPsychologists.Tests.Client
         public string AuthPsy(AuthRequestModel model) // reqistr kak psixolog
         {
             HttpStatusCode expectedCode = HttpStatusCode.OK;
-            string json = JsonSerializer.Serialize<AuthRequestModel>(model); // body
+            string json = JsonSerializer.Serialize<AuthRequestModel>(model); 
 
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
@@ -41,11 +41,11 @@ namespace SelectionPsychologists.Tests.Client
             {
                 Method = HttpMethod.Post,
                 RequestUri = new System.Uri($"https://piter-education.ru:10040/Auth"),
-                Content = new StringContent(json, Encoding.UTF8, "application/json") // esli est body
+                Content = new StringContent(json, Encoding.UTF8, "application/json") 
             };
             HttpResponseMessage responseMessage = client.Send(message);
 
-            HttpStatusCode actualCode = responseMessage.StatusCode; // sverit code
+            HttpStatusCode actualCode = responseMessage.StatusCode; 
             Assert.AreEqual(expectedCode, actualCode);
 
             string token = responseMessage.Content.ReadAsStringAsync().Result;
