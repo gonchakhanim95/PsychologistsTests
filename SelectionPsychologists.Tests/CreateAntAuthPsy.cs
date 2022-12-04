@@ -13,7 +13,7 @@ namespace SelectionPsychologists.Tests
         private const string EMAIL = "zakirella@gmail.ru";
 
         [Test]
-        public void ChangeDataPsyTest()
+        public void CreateAntAuthPsyTest()
         {
             PsychologistRequestModel psychologistsRequestModel = new PsychologistRequestModel() //rabotaet
             {
