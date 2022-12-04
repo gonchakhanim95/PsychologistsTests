@@ -79,8 +79,11 @@ namespace SelectionPsychologists.Tests
             token = superClient.Auth(auth);
 
             List<PsychologistResponseModel> psychologists = superClient.GetPsy(token);
-
-            CollectionAssert.Contains(psychologists, new PsychologistResponseModel());
+            PsychologistResponseModel psychologistResponseModel = new PsychologistResponseModel()
+            {
+                Name = psychologistRequestModel.Name
+            };
+            CollectionAssert.Contains(psychologists, psychologistResponseModel);
         }
 
         [TearDown]

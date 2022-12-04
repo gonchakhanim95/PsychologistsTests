@@ -1,5 +1,4 @@
-﻿using DeletePsy.Model;
-using SelectionPsychologists.Tests.Model;
+﻿using SelectionPsychologists.Tests.Model;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
