@@ -1,21 +1,21 @@
 ﻿using System;
-using SelectionPsychologists.Tests.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Net.Http.Headers;
+using SelectionPsychologists.Tests.Models;
 
 namespace SelectionPsychologists.Tests.Client
 {
     public class ClientClient
     {
-        public int RegistrationClient(ClientRequestModel model)
+        public int CreateClient(ClientModelForCreateClient model)
         {
             HttpStatusCode expectedCode = HttpStatusCode.Created;
-            string json = JsonSerializer.Serialize<ClientRequestModel>(model);
+            string json = JsonSerializer.Serialize<ClientModelForCreateClient>(model);
 
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
@@ -34,12 +34,13 @@ namespace SelectionPsychologists.Tests.Client
 
             int Id = Convert.ToInt32(responseMessage.Content.ReadAsStringAsync().Result);
             return Id;
+
         }
 
-        public string AuthClient(AuthClientRequestModel model)
+        public string AuthClient(ClientModelForAuthClient model)
         {
             HttpStatusCode expectedCode = HttpStatusCode.OK;
-            string json = JsonSerializer.Serialize<AuthClientRequestModel>(model);
+            string json = JsonSerializer.Serialize<ClientModelForAuthClient>(model);
 
             HttpClientHandler clientHandler = new HttpClientHandler();
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
@@ -59,10 +60,37 @@ namespace SelectionPsychologists.Tests.Client
             Assert.AreEqual(expectedCode, actualCode);
 
             string token = responseMessage.Content.ReadAsStringAsync().Result;
-
             return token;
         }
-        public CheckClientModel CheckClientById(int id,string token)
+
+        public List<PsychologistModel> ShowAllPsychologistsAsClient(string token)
+        {
+            HttpStatusCode expectedCode = HttpStatusCode.OK;
+
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            HttpClient client = new HttpClient(clientHandler);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            HttpRequestMessage message = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new System.Uri($"https://piter-education.ru:10040/Psychologists"),
+            };
+
+            HttpResponseMessage responseMessage = client.Send(message);
+            HttpStatusCode actualCode = responseMessage.StatusCode;
+
+            Assert.AreEqual(expectedCode, actualCode);
+
+            List<PsychologistModel> psychologistsModels = new List<PsychologistModel>();
+            psychologistsModels = JsonSerializer.Deserialize<List<PsychologistModel>>(responseMessage.Content.ReadAsStringAsync().Result);
+
+            return psychologistsModels;
+        }
+       
+        public CheckClientModel CheckClientById(int id, string token)
         {
             HttpStatusCode expectedCode = HttpStatusCode.OK;
 
@@ -73,7 +101,7 @@ namespace SelectionPsychologists.Tests.Client
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            HttpRequestMessage message = new HttpRequestMessage() 
+            HttpRequestMessage message = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
                 RequestUri = new System.Uri($"https://piter-education.ru:10040/Clients/{id}")
@@ -83,7 +111,7 @@ namespace SelectionPsychologists.Tests.Client
             HttpStatusCode actuaLCode = responseMessage.StatusCode;
             Assert.AreEqual(expectedCode, actuaLCode);
 
-            CheckClientModel clientModel = JsonSerializer.Deserialize<CheckClientModel>( responseMessage.Content.ReadAsStringAsync().Result);
+            CheckClientModel clientModel = JsonSerializer.Deserialize<CheckClientModel>(responseMessage.Content.ReadAsStringAsync().Result);
             return clientModel;
         }
     }

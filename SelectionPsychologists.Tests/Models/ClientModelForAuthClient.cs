@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SelectionPsychologists.Tests.Models
 {
-    public class AuthClientRequestModel
+    public class ClientModelForAuthClient
     {
         [JsonPropertyName("email")]
         public string Email { get; set; }

@@ -16,7 +16,7 @@ namespace SelectionPsychologists.Tests
         public void CreateAndAuthClientTest()
         {
             ClientClient client = new ClientClient();
-            ClientRequestModel clientRegistrationModel = new ClientRequestModel()
+            ClientModelForCreateClient clientCreateModel = new ClientModelForCreateClient()
             {
                 Name = "guseyn",
                 LastName = "gusikov",
@@ -26,9 +26,9 @@ namespace SelectionPsychologists.Tests
                 BirthDate = new DateTime(2002,11,11)
             };
 
-            int id = client.RegistrationClient(clientRegistrationModel);
+            int id = client.CreateClient(clientCreateModel);
 
-            AuthClientRequestModel clientAuthModel = new AuthClientRequestModel()
+            ClientModelForAuthClient clientAuthModel = new ClientModelForAuthClient()
             {
                 Email = EMAIL,
                 Password = PASSWORD
@@ -39,12 +39,12 @@ namespace SelectionPsychologists.Tests
             CheckClientModel expextedClient = new CheckClientModel()
             {
                 Id =id,
-                Name = clientRegistrationModel.Name,
-                LastName = clientRegistrationModel.LastName,
-                Password = clientRegistrationModel.Password,
-                Email = clientRegistrationModel.Email,
-                PhoneNumber = clientRegistrationModel.PhoneNumber,
-                BirthDate = clientRegistrationModel.BirthDate
+                Name = clientCreateModel.Name,
+                LastName = clientCreateModel.LastName,
+                Password = clientCreateModel.Password,
+                Email = clientCreateModel.Email,
+                PhoneNumber = clientCreateModel.PhoneNumber,
+                BirthDate = clientCreateModel.BirthDate
             };
             CheckClientModel actualClient = client.CheckClientById(id, token);
 
@@ -57,7 +57,7 @@ namespace SelectionPsychologists.Tests
             string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23;";
             IDbConnection dbConnection = new SqlConnection(connectionString);
             dbConnection.Open();
-            dbConnection.Query($"delete from dbo.Ñlient where Email = '{EMAIL}'");
+            dbConnection.Query($"delete Ñlient where Email = '{EMAIL}'");
             dbConnection.Close();
         }
         [OneTimeTearDown]

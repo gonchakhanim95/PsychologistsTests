@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SelectionPsychologists.Tests.Models
 {
-    public class ClientRequestModel
+    public class ClientModelForCreateClient
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -28,3 +28,4 @@ namespace SelectionPsychologists.Tests.Models
         public DateTime BirthDate { get; set; }
     }
 }
+
