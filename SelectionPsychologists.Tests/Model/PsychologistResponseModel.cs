@@ -43,9 +43,9 @@ namespace SelectionPsychologists.Tests.Model
                    Price == model.Price;
         }
 
-        public override string ToString()
+       /* public override string ToString()
         {
             return Name;
-        }
+        }*/
     }
 }
