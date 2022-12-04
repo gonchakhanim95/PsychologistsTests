@@ -12,12 +12,24 @@ namespace SelectionPsychologists.Tests.Models
     {
         [JsonPropertyName("problemName")]
         public string problemName { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Problem problem &&
+                   problemName == problem.problemName;
+        }
     }
 
     public class TherapyMethod
     {
         [JsonPropertyName("method")]
         public string method { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is TherapyMethod method &&
+                   this.method == method.method;
+        }
     }
 
     public class PsychologistModel
@@ -47,5 +59,19 @@ namespace SelectionPsychologists.Tests.Models
         [JsonPropertyName("price")]
         public double price { get; set; }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is PsychologistModel model &&
+                   name == model.name &&
+                   lastName == model.lastName &&
+                   gender == model.gender &&
+                   workExperience == model.workExperience &&
+                   price == model.price;
+        }
+
+       /* public override string ToString()
+        {
+            return name;
+        }*/
     }
 }
