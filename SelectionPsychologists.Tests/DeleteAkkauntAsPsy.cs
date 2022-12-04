@@ -1,0 +1,71 @@
+global using NUnit.Framework;
+using System.Data;
+using System.Data.SqlClient;
+using Dapper;
+using SelectionPsychologists.Tests.Client;
+using SelectionPsychologists.Tests.Model;
+
+namespace DeletePsy
+{
+    public class DeleteAccauntPsy
+    {
+        private const string EMAIL = "zakirella@mail.ru";
+        [Test]
+        public void DeleteAkkaunt()
+        {
+            PsychologistRequestModel psychologistsRequestModel = new PsychologistRequestModel() //rabotaet
+            {
+                Name = "Zakir",
+                LastName = "Hajiev",
+                Patronymic = "Seymur",
+                Gender = 1,
+                BirthDate = DateTime.Parse("2002-07-24"),
+                Phone = "589875641",
+                Password = "asdfghjkl",
+                Email = EMAIL,
+                WorkExperience = 8,
+                PasportData = "87444445",
+                Educations = new List<string>() { "BDU" },
+                CheckStatus = 1,
+                TherapyMethods = new List<string>() { "Behavioral" },
+                Problems = new List<string>() { "Family" },
+                Price = 50
+            };
+            PsychologistClient client = new PsychologistClient();
+            var id = client.CreatePsy(psychologistsRequestModel);
+
+            AuthRequestModel psyAuth = new AuthRequestModel()
+            {
+                Email = psychologistsRequestModel.Email,
+                Password = psychologistsRequestModel.Password
+            };
+            var token = client.AuthPsy(psyAuth);
+
+            client.DeleteAkkauntAsPsy(id,token);
+
+            AuthRequestModel auth = new AuthRequestModel()
+            {
+                Email = "user@example.com",
+                Password = "stringst"
+            };
+            SuperClient superClient = new SuperClient();
+            token = superClient.Auth(auth);
+
+            List<PsychologistResponseModel> psychologists = superClient.GetPsy(token);
+
+        }
+        [TearDown]
+        public void TD()
+        {
+            string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23";
+            IDbConnection dbConnection = new SqlConnection(connectionString);
+            dbConnection.Open();
+            dbConnection.Query($"delete from Education where PsychologistId = (select Id from Psychologist where Email = '{EMAIL}')");
+            dbConnection.Query($"delete from ProblemPsychologist");
+            dbConnection.Query($"delete from Problem");
+            dbConnection.Query($"delete from PsychologistTherapyMethod");
+            dbConnection.Query($"delete from Psychologist where Email = '{EMAIL}'");
+            dbConnection.Close();
+        }
+    }
+}
