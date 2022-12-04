@@ -57,7 +57,7 @@ namespace SelectionPsychologists.Tests
             string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23;";
             IDbConnection dbConnection = new SqlConnection(connectionString);
             dbConnection.Open();
-            dbConnection.Query($"delete from Ñlient where Email = '{EMAIL}'");
+            dbConnection.Query($"delete from dbo.Ñlient where Email = '{EMAIL}'");
             dbConnection.Close();
         }
         [OneTimeTearDown]
