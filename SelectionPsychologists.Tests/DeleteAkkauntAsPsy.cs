@@ -1,8 +1,9 @@
-using DeletePsy.Client;
-using DeletePsy.Model;
+global using NUnit.Framework;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper;
+using SelectionPsychologists.Tests.Client;
+using SelectionPsychologists.Tests.Model;
 
 namespace DeletePsy
 {

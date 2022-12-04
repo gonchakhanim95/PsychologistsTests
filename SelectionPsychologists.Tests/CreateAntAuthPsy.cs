@@ -1,3 +1,4 @@
+global using NUnit.Framework;
 using SelectionPsychologists.Tests.Client;
 using SelectionPsychologists.Tests.Model;
 using System.Data;
