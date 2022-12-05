@@ -1,19 +1,27 @@
- global using NUnit.Framework;
+﻿
+using Dapper;
 using SelectionPsychologists.Tests.Client;
+using SelectionPsychologists.Tests.Model;
 using SelectionPsychologists.Tests.Models;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Dapper;
-using SelectionPsychologists.Tests.Model;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SelectionPsychologists.Tests
 {
-    public class ShowAllPsychologists
+    public class FilterListPsychologistAsClient
     {
         private const string PASSWORD = "Client1Client";
         private const string clientEMAIL = "client@gmail.com";
         private const string psychoEmail1 = "Zakir@gmail.com";
         private const string psychoEmail2 = "Orxan@gmail.com";
+        private const string psychoEmail3 = "Aisha@gmail.com";
+        private const string psychoEmail4 = "Lamia@gmail.com";
+
 
         [SetUp]
         public void su()
@@ -32,7 +40,7 @@ namespace SelectionPsychologists.Tests
         }
 
         [Test]
-        public void ShowAllPsychologistsTest()
+        public void FilterListPsychologistAsClientTest()
         {
             ClientClient client = new ClientClient();
 
@@ -43,7 +51,7 @@ namespace SelectionPsychologists.Tests
                 Password = PASSWORD,
                 Email = clientEMAIL,
                 PhoneNumber = "+72222222222",
-                BirthDate = new DateTime(1990,02,02)
+                BirthDate = new DateTime(1990, 02, 02)
             };
 
             int id = client.CreateClient(createModel);
@@ -67,12 +75,12 @@ namespace SelectionPsychologists.Tests
                 Password = "Zakir1Psycho",
                 Email = psychoEmail1,
                 WorkExperience = 8,
-                PasportData = "87444445",
+                PasportData = "+71111111111",
                 Educations = new List<string>() { "BDU" },
                 CheckStatus = 1,
                 TherapyMethods = new List<string>() { "Behaviorall" },
                 Problems = new List<string>() { "Family" },
-                Price = 50
+                Price = 210
             };
             PsychologistRequestModel psychologistsRequestModel2 = new PsychologistRequestModel() //rabotaet
             {
@@ -92,42 +100,73 @@ namespace SelectionPsychologists.Tests
                 Problems = new List<string>() { "Family" },
                 Price = 50
             };
+            PsychologistRequestModel psychologistsRequestModel3 = new PsychologistRequestModel() //rabotaet
+            {
+                Name = "Aisha",
+                LastName = "Hajieva",
+                Patronymic = "Sakal",
+                Gender = 0,
+                BirthDate = DateTime.Parse("1998-07-24"),
+                Phone = "+73333333333",
+                Password = "Aisha1Psycho",
+                Email = psychoEmail3,
+                WorkExperience = 5,
+                PasportData = "33333333",
+                Educations = new List<string>() { "ADNSU" },
+                CheckStatus = 1,
+                TherapyMethods = new List<string>() { "Leblegusa" },
+                Problems = new List<string>() { "Kayfariki" },
+                Price = 120
+            };
+            PsychologistRequestModel psychologistsRequestModel4 = new PsychologistRequestModel() //rabotaet
+            {
+                Name = "Lamia",
+                LastName = "Valieva",
+                Patronymic = "Bilmirem",
+                Gender = 0,
+                BirthDate = DateTime.Parse("2000-07-25"),
+                Phone = "+74444444444",
+                Password = "Lamia1Psycho",
+                Email = psychoEmail4,
+                WorkExperience = 4,
+                PasportData = "33333333",
+                Educations = new List<string>() { "ATU" },
+                CheckStatus = 1,
+                TherapyMethods = new List<string>() { "Psixopat" },
+                Problems = new List<string>() { "Criminal" },
+                Price = 69
+            };
+
             PsychologistClient psychologistClient = new PsychologistClient();
 
             psychologistClient.CreatePsy(psychologistsRequestModel1);
             psychologistClient.CreatePsy(psychologistsRequestModel2);
-               
-            List<PsychologistRequestModel> myPsycho = new List<PsychologistRequestModel>();
-            myPsycho.Add(psychologistsRequestModel1);
-            myPsycho.Add(psychologistsRequestModel2);
+            psychologistClient.CreatePsy(psychologistsRequestModel3);
+            psychologistClient.CreatePsy(psychologistsRequestModel4);
 
+            SearchRequastModel searchRequastModel = new SearchRequastModel()
+            {
+                Name = psychologistsRequestModel1.Name,
+                PhoneNumber = psychologistsRequestModel1.Phone,
+                Description = "vse norm slava bogu",
+                PsychologistGender = psychologistsRequestModel1.Gender,
+                CostMin = 100,
+                CostMax = 300,
+                Date = psychologistsRequestModel1.BirthDate,
+                Time = 2
+            };
+            int idFromSearch = client.FilterListPsycholoogist(searchRequastModel, token);
 
-            List<PsychologistModel> psychologists = client.ShowAllPsychologistsAsClient(token);
-            CollectionAssert.AreEqual(psychologists, myPsycho);
+            /*CheckClientModel checkClientModel = client.CheckClientById(idFromSearch, token);*/
 
-        }
+           /* CheckClientModel checkClient = new CheckClientModel()
+            {
+                Name = searchRequastModel.Name,
+                PhoneNumber = searchRequastModel.PhoneNumber,
+                BirthDate = searchRequastModel.Date
+            };
+            CollectionAssert.AreEqual(checkClient, checkClientModel);*/
 
-        [TearDown]
-        public void td()
-        {
-            string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23;";
-            IDbConnection dbConnection = new SqlConnection(connectionString);
-            dbConnection.Open();
-            dbConnection.Query($"delete from BBSK_PsychoDb4.dbo.Client where Email = '{clientEMAIL}'");
-
-            dbConnection.Query($"delete from PsychologistTherapyMethod");
-            dbConnection.Query($"delete from Education");
-            dbConnection.Query($"delete from ProblemPsychologist");
-            dbConnection.Query($"delete from [Order]");
-            dbConnection.Query($"delete from Schedule");
-            dbConnection.Query($"delete from Comment");
-            dbConnection.Query($"delete from Psychologist");
-            dbConnection.Close();
-        }
-        [OneTimeTearDown]
-        public void ottd()
-        {
-           
         }
     }
 }
