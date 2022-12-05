@@ -9,8 +9,24 @@ namespace SelectionPsychologists.Tests
 {
     public class ChangeDataPsyTest
     {
-        private const string EMAIL = "zakirella@gmail.ru";
+        private const string EMAIL = "zakiriella@gmail.ru";
 
+        [SetUp]
+        public void SU()
+        {
+            string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23;";
+            IDbConnection dbConnection = new SqlConnection(connectionString);
+            dbConnection.Open();
+            dbConnection.Query($"delete from PsychologistTherapyMethod");
+            dbConnection.Query($"delete from Education");
+            dbConnection.Query($"delete from ProblemPsychologist");
+            dbConnection.Query($"delete from [Order]");
+            dbConnection.Query($"delete from Schedule");
+            dbConnection.Query($"delete from Comment");
+            dbConnection.Query($"delete from Psychologist");
+            dbConnection.Close();
+        }
+        
         [Test]
         public void ChangeDataPsyTests()
         {
@@ -77,26 +93,36 @@ namespace SelectionPsychologists.Tests
             };
             SuperClient superClient = new SuperClient();
             token = superClient.Auth(auth);
+            PsychologistResponseModel responseModel = new PsychologistResponseModel()
+            {
+                Name=psychologistRequestModel.Name,
+                LastName=psychologistRequestModel.LastName,
+                Gender=psychologistRequestModel.Gender,
+                WorkExperience=psychologistRequestModel.WorkExperience,
+                Price=psychologistRequestModel.Price
+            };
+            
+            List<PsychologistResponseModel> list = new List<PsychologistResponseModel>();
+            list.Add(responseModel);
 
             List<PsychologistResponseModel> psychologists = superClient.GetPsy(token);
-            PsychologistResponseModel psychologistResponseModel = new PsychologistResponseModel()
-            {
-                Name = psychologistRequestModel.Name
-            };
-            CollectionAssert.Contains(psychologists, psychologistResponseModel);
+            CollectionAssert.AreEqual(psychologists, list);
+
         }
 
         [TearDown]
         public void TD()
         {
-            string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23";
+            string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23;";
             IDbConnection dbConnection = new SqlConnection(connectionString);
             dbConnection.Open();
-            dbConnection.Query($"delete from Education where PsychologistId = (select Id from Psychologist where Email = '{EMAIL}')");
-            dbConnection.Query($"delete from ProblemPsychologist");
-            dbConnection.Query($"delete from Problem");
             dbConnection.Query($"delete from PsychologistTherapyMethod");
-            dbConnection.Query($"delete from Psychologist where Email = '{EMAIL}'");
+            dbConnection.Query($"delete from Education");
+            dbConnection.Query($"delete from ProblemPsychologist");
+            dbConnection.Query($"delete from [Order]");
+            dbConnection.Query($"delete from Schedule");
+            dbConnection.Query($"delete from Comment");
+            dbConnection.Query($"delete from Psychologist");
             dbConnection.Close();
         }
 

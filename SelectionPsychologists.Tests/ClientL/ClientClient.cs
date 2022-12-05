@@ -98,8 +98,6 @@ namespace SelectionPsychologists.Tests.ClientL
 
             HttpClient client = new HttpClient(handler);
 
-            //client.DefaultRequestHeaders.Authorization = new AuthorizationHeaderValue("Bearer", token)
-
             HttpRequestMessage message = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
@@ -107,12 +105,55 @@ namespace SelectionPsychologists.Tests.ClientL
             };
             HttpResponseMessage responseMessage = client.Send(message);
             HttpStatusCode actualCode = responseMessage.StatusCode;
-            Assert.AreEqual(expectedCode, actualCode);
 
-            //string responseJson = responseMessage.Content.ReadAsStringAsync().Result;
+            Assert.AreEqual(expectedCode, actualCode);
 
             OrderResponseModel Order = JsonSerializer.Deserialize<OrderResponseModel>(responseMessage.Content.ReadAsStringAsync().Result);
             return Order;
+        }
+        public void EditProfileAsClient(int id, ClientRequestModel model, string token)
+        {
+            HttpStatusCode expectedCode = HttpStatusCode.NoContent;
+            string json = JsonSerializer.Serialize<ClientRequestModel>(model);
+
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, ssPolicyErrors) => { return true; };
+
+            HttpClient client = new HttpClient(handler);
+            //client.DefaultRequestHeaders.Authorization = new AuthorizationHeaderValue("Bearer", token);
+
+            HttpRequestMessage message = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Put,
+                RequestUri = new System.Uri($"https://piter-education.ru:10040/Clients/{id}"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage responseMessage = client.Send(message);
+
+            HttpStatusCode actualCode = responseMessage.StatusCode;
+
+            Assert.AreEqual(expectedCode, actualCode);
+        }
+        public ClientRequestModel GetChangedClientProfile(int id)
+        {
+            HttpStatusCode expectedCode = HttpStatusCode.OK;
+
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, ssPolicyErrors) => { return true; };
+
+            HttpClient client = new HttpClient(handler);
+
+            HttpRequestMessage message = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new System.Uri($"https://piter-education.ru:10040/Clients/{id}")
+            };
+            HttpResponseMessage responseMessage = client.Send(message);
+            HttpStatusCode actualCode = responseMessage.StatusCode;
+            Assert.AreEqual(expectedCode, actualCode);
+
+            ClientRequestModel AClient = JsonSerializer.Deserialize<ClientRequestModel>(responseMessage.Content.ReadAsStringAsync().Result);
+            return AClient;
         }
     }
 }
