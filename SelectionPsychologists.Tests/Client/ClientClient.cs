@@ -90,6 +90,30 @@ namespace SelectionPsychologists.Tests.Client
             return psychologistsModels;
         }
        
+        public CheckClientModel CheckClientByIdAfterDelete(int id, string token)
+        {
+            HttpStatusCode expectedCode = HttpStatusCode.NotFound;
+
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            HttpClient client = new HttpClient(clientHandler);
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            HttpRequestMessage message = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new System.Uri($"https://piter-education.ru:10040/Clients/{id}")
+            };
+
+            HttpResponseMessage responseMessage = client.Send(message);
+            HttpStatusCode actuaLCode = responseMessage.StatusCode;
+            Assert.AreEqual(expectedCode, actuaLCode);
+
+            CheckClientModel clientModel = JsonSerializer.Deserialize<CheckClientModel>(responseMessage.Content.ReadAsStringAsync().Result);
+            return clientModel;
+        }
         public CheckClientModel CheckClientById(int id, string token)
         {
             HttpStatusCode expectedCode = HttpStatusCode.OK;
@@ -165,6 +189,27 @@ namespace SelectionPsychologists.Tests.Client
 
             PsychologistModel psychoModel = JsonSerializer.Deserialize<PsychologistModel>(responseMessage.Content.ReadAsStringAsync().Result);
             return psychoModel;
+        }
+
+        public void DeleteClient(int id,string token)
+        {
+            HttpStatusCode expectedCode = HttpStatusCode.NoContent;
+
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            HttpClient client = new HttpClient(clientHandler);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            HttpRequestMessage message = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new System.Uri($"https://piter-education.ru:10040/Clients/{id}"),
+            };
+
+            HttpResponseMessage responseMessage = client.Send(message);
+            HttpStatusCode actualCode = responseMessage.StatusCode;
+            Assert.AreEqual(expectedCode, actualCode);
         }
     }
 }
