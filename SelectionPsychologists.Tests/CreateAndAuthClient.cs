@@ -11,7 +11,18 @@ namespace SelectionPsychologists.Tests
     {
         private const string EMAIL = "guseyn123qwer23@gmail.com";
         private const string PASSWORD = "Gus1Client";
-
+        [SetUp]
+        public void su()
+        {
+            string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23;";
+            IDbConnection dbConnection = new SqlConnection(connectionString);
+            dbConnection.Open();
+            dbConnection.Query("delete from Comment");
+            dbConnection.Query("delete from [Order]");
+            dbConnection.Query("delete from dbo.ApplicationForPsychologistSearch");
+            dbConnection.Query($"delete from dbo.Ñlient ");
+            dbConnection.Close();
+        }
         [Test]
         public void CreateAndAuthClientTest()
         {
@@ -57,7 +68,10 @@ namespace SelectionPsychologists.Tests
             string connectionString = @"Data Source = 80.78.240.16; Initial Catalog = BBSK_PsychoDb4; Persist Security Info = True; User ID = student; Password = qwe!23;";
             IDbConnection dbConnection = new SqlConnection(connectionString);
             dbConnection.Open();
-            dbConnection.Query($"delete Ñlient where Email = '{EMAIL}'");
+            dbConnection.Query("delete from Comment");
+            dbConnection.Query("delete from [Order]");
+            dbConnection.Query("delete from dbo.ApplicationForPsychologistSearch");
+            dbConnection.Query($"delete from dbo.Ñlient ");
             dbConnection.Close();
         }
         [OneTimeTearDown]
