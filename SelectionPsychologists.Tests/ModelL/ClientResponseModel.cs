@@ -5,9 +5,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace SelectionPsychologists.Tests.Models
+namespace SelectionPsychologists.Tests.ModelL
 {
-    public class CheckClientModel
+    public class ClientResponseModel
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
@@ -18,9 +18,6 @@ namespace SelectionPsychologists.Tests.Models
         [JsonPropertyName("lastName")]
         public string LastName { get; set; }
 
-        [JsonPropertyName("password")]
-        public string Password { get; set; }
-
         [JsonPropertyName("email")]
         public string Email { get; set; }
 
@@ -30,15 +27,7 @@ namespace SelectionPsychologists.Tests.Models
         [JsonPropertyName("birthDate")]
         public DateTime BirthDate { get; set; }
 
-        public override bool Equals(object? obj)
-        {
-            return obj is CheckClientModel model &&
-                   Name == model.Name &&
-                   LastName == model.LastName &&
-                   Email == model.Email &&
-                   PhoneNumber == model.PhoneNumber &&
-                   BirthDate == model.BirthDate;
-        }
-        
+        [JsonPropertyName("registrationDate")]
+        public DateTime RegistrationDate { get; set; }
     }
 }

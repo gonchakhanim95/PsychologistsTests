@@ -5,13 +5,10 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace SelectionPsychologists.Tests.Models
+namespace SelectionPsychologists.Tests.ModelL
 {
-    public class CheckClientModel
+    public class ClientRequestModel
     {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
-
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
@@ -29,16 +26,5 @@ namespace SelectionPsychologists.Tests.Models
 
         [JsonPropertyName("birthDate")]
         public DateTime BirthDate { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is CheckClientModel model &&
-                   Name == model.Name &&
-                   LastName == model.LastName &&
-                   Email == model.Email &&
-                   PhoneNumber == model.PhoneNumber &&
-                   BirthDate == model.BirthDate;
-        }
-        
     }
 }
