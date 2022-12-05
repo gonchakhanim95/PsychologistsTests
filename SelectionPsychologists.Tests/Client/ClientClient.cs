@@ -114,5 +114,57 @@ namespace SelectionPsychologists.Tests.Client
             CheckClientModel clientModel = JsonSerializer.Deserialize<CheckClientModel>(responseMessage.Content.ReadAsStringAsync().Result);
             return clientModel;
         }
+
+        public int FilterListPsycholoogist(SearchRequastModel model,string token)
+        {
+            HttpStatusCode expectedCode = HttpStatusCode.Created;
+            string json = JsonSerializer.Serialize<SearchRequastModel>(model);
+
+
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            HttpClient client = new HttpClient(clientHandler);
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            HttpRequestMessage message = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new System.Uri($"https://piter-education.ru:10040/search-requests"),
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+
+            HttpResponseMessage responseMessage = client.Send(message);
+            HttpStatusCode actuaLCode = responseMessage.StatusCode;
+            Assert.AreEqual(expectedCode, actuaLCode);
+
+            int idFromSearch = Convert.ToInt32(responseMessage.Content.ReadAsStringAsync().Result);
+
+            return idFromSearch;
+        }
+
+        public PsychologistModel FilterListPsycholoogistGetId(int problem)
+        {
+            HttpStatusCode expectedCode = HttpStatusCode.OK;
+
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            HttpClient client = new HttpClient(clientHandler);
+
+            HttpRequestMessage message = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new System.Uri($"https://piter-education.ru:10040/Psychologists/search-by-parametrs?Price=1&Problems={problem}"),
+            };
+
+            HttpResponseMessage responseMessage = client.Send(message);
+            HttpStatusCode actuaLCode = responseMessage.StatusCode;
+            Assert.AreEqual(expectedCode, actuaLCode);
+
+            PsychologistModel psychoModel = JsonSerializer.Deserialize<PsychologistModel>(responseMessage.Content.ReadAsStringAsync().Result);
+            return psychoModel;
+        }
     }
 }
