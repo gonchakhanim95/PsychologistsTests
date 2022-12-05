@@ -39,6 +39,6 @@ namespace SelectionPsychologists.Tests.Models
                    PhoneNumber == model.PhoneNumber &&
                    BirthDate == model.BirthDate;
         }
-
+        
     }
 }
